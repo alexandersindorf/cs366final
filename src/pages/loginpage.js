@@ -1,7 +1,19 @@
+import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import './loginpage.css';
 
 function LoginPage() {
+
+  const navigate = useNavigate();
+
+  const navigateToPwRecovery = () => {
+    navigate('/pwRecovery');
+  };
+
+  const navigateToSetUser = () => {
+    navigate('/setUser');
+  };
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -27,7 +39,8 @@ function LoginPage() {
           <label>Password</label>
         </div>
         <div class="pass">Forgot Password?</div>
-        <input type="submit" value="Login"/>
+        <button className="login-button" onClick={navigateToSetUser}>Create Account</button>
+        <button type="submit" value="Login" className="login-button" onClick={navigateToPwRecovery}>Recover Password</button>
         <div class="signup_link">
           Not a member? <a href="#">Signup</a>
         </div>

@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import './homepage.css'
 import RadarChart from './RadarChart';
 import logo from '../lotus.png';
