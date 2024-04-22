@@ -12,34 +12,34 @@ function SetUser() {
 
   return (
     <div class="center">
-      <h1>Login</h1>
+      <h1>Set Account</h1>
       <form method="post">
         <div class="txt_field">
           <input type="text" required/>
           <span></span>
-          <label>Username</label>
+          <label>Type Username</label>
         </div>
         <div class="txt_field">
           <input type="password" required/>
           <span></span>
-          <label>Password</label>
+          <label>Type Password</label>
         </div>
         <div class="txt_field">
           <input type="password" required/>
           <span></span>
-          <label>Password</label>
+          <label>Confirm Password</label>
         </div>
+        <p>Recovery Question:<br></br> What is your mother's maiden name?</p>
         <div class="txt_field">
-          <input type="password" required/>
+          <input type="text" required/>
           <span></span>
-          <label>Password</label>
+          <label>Recovery Question Answer</label>
         </div>
-        <div class="pass">Forgot Password?</div>
-            <button type="submit" value="Login" className="login-button" onClick={navigateToLogin}>Set</button>
-        <div class="signup_link">
-          Not a member? <a href="#">Signup</a>
-        </div>
+            <input type="submit" value="Set Account"/>
       </form>
+        <div class="signup_link">
+          <a onClick={navigateToLogin}>Return to Login</a>
+        </div>
     </div>
   );
 }

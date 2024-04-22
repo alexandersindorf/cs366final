@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './loginpage.css';
 
 function SetDataPage() {
+
+    const navigate = useNavigate();
+
+    const navigateToHome = () => {
+        navigate('/');
+      };
 
   return (
     <div class="center">
       <h1>Set Demographic Data</h1>
       <form method="post">
         <div>
-            <label for = "age">Age Range</label>
-            <select name = "age" id = "age">
+            <label for = "age">Age Range:</label>
+            <select class = "dropdown" name = "age" id = "age">
                 <option value = "1">18 - 29 Years</option>
                 <option value = "3">30 - 39 Years</option>
                 <option value = "4">40 - 49 Years</option>
@@ -20,8 +26,8 @@ function SetDataPage() {
             </select>
         </div>
         <div>
-            <label for = "state">State</label>
-            <select name = "state" id = "state">
+            <label for = "state">State:</label>
+            <select class = "dropdown" name = "state" id = "state">
                 <option value = "AL">Alabama</option>
                 <option value = "AK">Alaska</option>
                 <option value = "AZ">Arizona</option>
@@ -76,8 +82,8 @@ function SetDataPage() {
             </select>
         </div>
         <div>
-            <label for = "race">Race</label>
-            <select name = "race" id = "race">
+            <label for = "race">Race:</label>
+            <select class = "dropdown" name = "race" id = "race">
                 <option value = "HoL">Hispanic or Latino</option>
                 <option value = "aSR">Non-Hispanic Asian, Single Race</option>
                 <option value = "bSR">Non-Hispanic Black, Single Race</option>
@@ -86,8 +92,8 @@ function SetDataPage() {
             </select>
         </div>
         <div>
-            <label for = "edu">Education</label>
-            <select name = "edu" id = "edu">
+            <label for = "edu">Education:</label>
+            <select class = "dropdown" name = "edu" id = "edu">
                 <option value = "HSD">Less than a High School Deploma</option>
                 <option value = "GED">High School Diploma or GED</option>
                 <option value = "CAD">Some College/Associate's Degree</option>
@@ -95,40 +101,33 @@ function SetDataPage() {
             </select>
         </div>
         <div>
-            <p>Sexual Orientaiton</p>
-            <input type = "radio" id = "gl"></input>
-            <label for = "gl">Gay or Lesbian</label>
-            <input type = "radio" id = "st"></input>
-            <label for = "st">Straight</label>
-            <input type = "radio" id = "bi"></input>
-            <label for = "bi">Bisexual</label>
+            <p>Sex</p>
+            <input type = "radio" name = "Sex" id = "fe" value = "fe"/><label for = "">Female</label>
+            <input type = "radio" name = "Sex" id = "ma" value = "ma"/><label for = "">Male</label>
         </div>
         <div>
-            <p>Sex</p>
-            <input type = "radio" id = "fe"></input>
-            <label for = "fe">Female</label>
-            <input type = "radio" id = "ma"></input>
-            <label for = "ma">Male</label>
+            <p>Sexual Orientaiton</p>
+            <input type = "radio" name = "SOr" id = "gl" value = "gl"/><label for = "">Gay or Lesbian</label>
+            <input type = "radio" name = "SOr" id = "st" value = "st"/><label for = "">Straight</label>
+            <input type = "radio" name = "SOr" id = "bi" value = "bi"/><label for = "">Bisexual</label>
         </div>
         <div>
             <p>Gender Identity</p>
-            <input type = "radio" id = "cgm"></input>
-            <label for = "cgm">Cis-gender Male</label>
-            <input type = "radio" id = "cgf"></input>
-            <label for = "cgf">Cis-gender Female</label>
-            <input type = "radio" id = "trg"></input>
-            <label for = "trg">Transgender</label>
+            <input type = "radio" name = "genderI" id = "cgm" value = "cgm"/><label for = "">Cis-gender Male</label>
+            <input type = "radio" name = "genderI" id = "cgf" value = "cgf"/><label for = "">Cis-gender Female</label>
+            <input type = "radio" name = "genderI" id = "trg" value = "trg"/><label for = "">Transgender</label>
         </div>
         <div>
             <p>Disability Status</p>
-            <input type = "radio" id = "yd"></input>
-            <label for = "yd">With Disability</label>
-            <input type = "radio" id = "nd"></input>
-            <label for = "nd">Without Disability</label>
+            <input type = "radio" name = "DisStat" id = "yd" value = "yd"/><label for = "">With Disability</label>
+            <input type = "radio" name = "DisStat" id = "nd" value = "nd"/><label for = "">Without Disability</label>
         </div>
-        <div class="pass">Set Demographics</div>
-        <input type="submit" value="Set"/>
+        <br></br>
+        <input type="submit" value="Set Demographics"/>
       </form>
+      <div class="signup_link">
+          <a onClick={navigateToHome}>Return to Home</a>
+        </div>
     </div>
   );
 }

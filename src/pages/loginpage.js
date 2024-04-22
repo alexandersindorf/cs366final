@@ -38,11 +38,12 @@ function LoginPage() {
           <span></span>
           <label>Password</label>
         </div>
-        <div class="pass">Forgot Password?</div>
-        <button className="login-button" onClick={navigateToSetUser}>Create Account</button>
-        <button type="submit" value="Login" className="login-button" onClick={navigateToPwRecovery}>Recover Password</button>
+        <input type="submit" value="Login"/>
+        
         <div class="signup_link">
-          Not a member? <a href="#">Signup</a>
+          <a onClick={navigateToSetUser}>Create Account/Set Account Info</a>
+          <br></br><br></br>
+          <a onClick={navigateToPwRecovery}>Forgot Password?</a>
         </div>
       </form>
     </div>

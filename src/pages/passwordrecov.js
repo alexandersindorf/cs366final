@@ -11,7 +11,7 @@ function PasswordRecovery() {
 
   return (
     <div class="center">
-      <h1>Login</h1>
+      <h1>Password Recovery</h1>
       <form method="post">
         <div class="txt_field">
           <input type="text" required/>
@@ -21,12 +21,14 @@ function PasswordRecovery() {
         <div class="txt_field">
           <input type="password" required/>
           <span></span>
-          <label>Password</label>
+          <label>Password Question Answer</label>
         </div>
-        <div class="pass">Forgot Password?</div>
-        <input type="submit" value="Login"/>
+
+        <h2>Password: </h2><h2 id = "recovered"></h2>
+
+        <input type="submit" value="Get Password"/>
         <div class="signup_link">
-          <button className="login-button" onClick={navigateToLogin}>Log In</button>
+          <a onClick={navigateToLogin}>Log In</a>
         </div>
       </form>
     </div>

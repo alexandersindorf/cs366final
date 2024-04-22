@@ -8,7 +8,6 @@ function TipPage() {
 <header className="App-header">
 <img src={logo} alt="logo" style={{ width: '250px', height: '250px' }} /> {}
     <h2>Anxiety and Depression Survey DBMS</h2>
-    <h3>Group Members: Alex Sindorf, Martin Amundsen, Kaleb Johnson</h3>
     </header>
 <body>
   <div>

@@ -22,9 +22,9 @@ function Banner() {
 
   return (
     <div className="banner">
-      <button className="set-DD" onClick= {navigateToDD}>Set Demographic Data</button>
-      <button className="tips" onClick={navigateToTips}>Tips</button>
+      <button className="login-button" onClick= {navigateToDD}>Set Demographic Data</button>
       <h1 className="banner-title" onClick={navigateToHome} style={{ cursor: 'pointer' }}>UWW CompSci 366 Final</h1>
+      <button className="login-button" onClick={navigateToTips}>Wellness Tips</button>
       <button className="login-button" onClick={navigateToLogin}>Log In</button>
     </div>
   );
