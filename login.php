@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -41,16 +44,16 @@
                 </div>
             </nav>
         </div>
-        <div action = "index.php?action=login" class="center">
+        <div class="center">
             <h1>Login</h1>
-            <form method="post">
+            <form action = "index.php?action=login" method="post">
                 <div class="txt_field">
-                <input type="text" required/>
+                <input type="text" name = "uid" required/>
                 <span></span>
                 <label>Username</label>
                 </div>
                 <div class="txt_field">
-                <input type="password" required/>
+                <input type="password" name = "password" required/>
                 <span></span>
                 <label>Password</label>
                 </div>
@@ -100,7 +103,8 @@
                                     foreach($check as $item){
                                         foreach ($item as $key => $value) {
                                             if ($value != 1){ // taken username
-                                                break; 
+                                                echo "Invalid username or security question answer!"; 
+                                                die(); 
                                             }
                                         }
                                     }
@@ -156,7 +160,8 @@
                                     foreach($check as $item){
                                         foreach ($item as $key => $value) {
                                             if ($value != 0){ // taken username
-                                                break; 
+                                                echo "This username already exists";
+                                                die();
                                             }
                                         }
                                     }
