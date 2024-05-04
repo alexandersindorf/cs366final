@@ -1,3 +1,8 @@
+<?php
+session_start();
+
+$_SESSION['uid'] = ''; // Default no user logged in
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -36,20 +41,18 @@
                             <a class="nav-link" href="index.php">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.php?mode=query">Query</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.php?mode=stored">Stored</a>
+                            <a class="nav-link" href="index.php?action=query">Query</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="login.php">Login</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="setDataPage.php">Set Demographic Data</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="quiz.php">Quiz</a>
-                        </li>
+                        <?php
+                        if ($_SESSION['uid'] == ''){
+                        echo "<li class='nav-item'><a class='nav-link' href='setDataPage.php'>Set Demographic Data</a></li>";
+                        echo "<li class='nav-item'><a class='nav-link' href='quiz.php?qz=anx'>Anxiety Quiz</a></li>";
+                        echo "<li class='nav-item'><a class='nav-link' href='quiz.php?qz=dep'>Depression Quiz</a></li>";
+                        echo "<li class='nav-item'><a class='nav-link' href='quiz.php?qz=both'>Anxiety and Depression Quiz</a></li>";
+                        }?>
                     </ul>
                 </div>
             </nav>
@@ -58,81 +61,165 @@
    
         <?php
     
-        $mode = ""; 
-        $parameterValues = null; 
-        $pageTitle = ""; 
-        $columns = array(); 
+        $action = "";
+        $parameterValues = null;
         
         try {
-            if (isset($_GET['mode'])) {
-                $mode = $_GET['mode'];
+            if (isset($_GET['action'])) {
+                $action = $_GET['action'];
             }
             
-            switch ($mode) {
+            switch ($action) {
+                case "login":
+                break;
                 case "query": 
 
                     $sql = "Select s.Subgroup, AVG(p.Percent) from UserDemographicData u, Search s, PulseSurveyDataset p where u.UID = 'Kaleb' and u.UID = s.UID and s.Indicator = p.Indicator and p.Indicator = 'Symptoms of Anxiety Disorder or Depressive Disorder' and s.Subgroup = p.Subgroup Group By s.Subgroup Order By p.Percent DESC";
                     
                     //$parameterValues = array(":genre" => $genre);
- 
-                    echo $sql;
                     $resultSet = getAll($sql, $db, $parameterValues);
                     
                     $pageTitle = "List of Groups";
                     $columns = array("Subgroup", "AVG");
                     displayResultSet($pageTitle, $resultSet, $columns);
-                    break;
-                case "stored":
-                        echo "<div>";
-                        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                        
-                        $stmt = $db->prepare("CALL resetPass(?, ?, ?)");
-                        $stmt->bindValue(1,"John", PDO::PARAM_STR);
-                        $stmt->bindValue(2,"pass4", PDO::PARAM_STR);
-                        $stmt->bindValue(3,"Green", PDO::PARAM_STR);
-
-                        $stmt->execute();
-                        echo "Updated Password Successfully";
-                        echo "</div>";
-                    break;
-                case "reset":
-                    try {
-                                    $user = "";
-                                    if (isset($_POST['user'])) {
-                                       $user = $_POST['user'];
-                                    }
-                                    $pass = "";
-                                    if (isset($_POST['pass'])) {
-                                       $pass = $_POST['pass'];
-                                    }
-                                    $ques = "";
-                                    if (isset($_POST['ques'])) {
-                                       $ques = $_POST['ques'];
-                                    }
-                                    
-            
-                                    if ($user === '' || $pass === '' || $ques === '') {
-                                        echo "Invalid data";
-                                        } else {
-                                    echo "<div>";
-                                    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                                    
-                                    $stmt = $db->prepare("CALL resetPass(?, ?, ?)");
-                                    $stmt->bindValue(1,$user, PDO::PARAM_STR);
-                                    $stmt->bindValue(2,$pass, PDO::PARAM_STR);
-                                    $stmt->bindValue(3,$ques, PDO::PARAM_STR);
-                                    
-                                    $stmt->execute();
-                                    echo "Updated Password Successfully!";
-                                    echo "</div>";}
-                } catch (PDOException $e) {
-                    echo "Error!: ". $e->getMessage() . "<br/>";
-                    die();
-                }
                 break;
-                default: // Default page
-                    echo "<h3>Anxiety and Depression Survey DBMS<h3>";
-                    break;
+                case "set":
+                try {
+                    $uid = '';
+                    $age = 'blank';
+                    $state = 'blank';
+                    $race = 'blank';
+                    $edu = 'blank';
+                    $Sex = 'blank';
+                    $SOr = 'blank';
+                    $genderI = 'blank';
+                    $DisStat = 'blank';
+
+
+                     if (isset($_SESSION["uid"])) {
+                        $uid = $_SESSION["uid"];
+                     }
+                     if (isset($_POST['age'])) {
+                        $age = $_POST['age'];
+                     }
+                     if (isset($_POST['state'])) {
+                        $state = $_POST['state'];
+                     }
+                     if (isset($_POST['race'])) {
+                        $race = $_POST['race'];
+                     }
+                     if (isset($_POST['edu'])) {
+                        $edu = $_POST['edu'];
+                     }
+                     if (isset($_POST['Sex'])) {
+                        $Sex = $_POST['Sex'];
+                     }
+                     if (isset($_POST['SOr'])) {
+                        $SOr = $_POST['SOr'];
+                     }
+                     if (isset($_POST['genderI'])) {
+                        $genderI = $_POST['genderI'];
+                     }
+                     if (isset($_POST['DisStat'])) {
+                        $DisStat = $_POST['DisStat'];
+                     }
+
+                     if($uid === '') {
+                        echo "Invalid Data";
+                     } else {
+                     
+                     echo "<div>";
+                     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                     
+                     $stmt = $db->prepare("CALL setUserData(?,?,?,?,?,?,?,?,?)");
+                     $stmt->bindValue(1,$uid, PDO::PARAM_STR);
+                     $stmt->bindValue(2,$age, PDO::PARAM_STR);
+                     $stmt->bindValue(3,$Sex, PDO::PARAM_STR);
+                     $stmt->bindValue(4,$genderI, PDO::PARAM_STR);
+                     $stmt->bindValue(5,$SOr, PDO::PARAM_STR);
+                     $stmt->bindValue(6,$race, PDO::PARAM_STR);
+                     $stmt->bindValue(7,$edu, PDO::PARAM_STR);
+                     $stmt->bindValue(8,$DisStat, PDO::PARAM_STR);
+                     $stmt->bindValue(9,$state, PDO::PARAM_STR);
+                     
+                     $stmt->execute();
+                     echo "<br></br>";
+                     echo "Set Demographic Data Successfully";
+                     echo "</div>";
+                     }
+ } catch (PDOException $e) {
+     echo "Error!: ". $e->getMessage() . "<br/>";
+     die();
+ }
+ break;
+            case "submitQuiz":
+                try {
+                    $uid = '';
+                    $score = 0;
+                    $date = '';
+                    $time = '';
+                    $indicator = '';
+
+
+
+                    if (isset($_SESSION["uid"])) {
+                        $uid = $_SESSION["uid"];
+                    }
+
+                    if (isset($_POST['aq1'])) {
+                        $score += $_POST['aq1'];
+                    }
+                    if (isset($_POST['aq2'])) {
+                        $score += $_POST['aq2'];
+                    }
+                    if (isset($_POST['dq1'])) {
+                        $score += $_POST['dq1'];
+                    }
+                    if (isset($_POST['dq2'])) {
+                        $score += $_POST['dq2'];
+                    }
+                    echo $score;
+
+                    if (isset($_GET['indicator'])) {
+                        if ($_GET['indicator'] === 'anx'){
+                            $indicator = "Symptoms of Anxiety Disorder";
+                        }
+                        if ($_GET['indicator'] === 'dep'){
+                            $indicator = "Symptoms of Depressive Disorder";
+                        }
+                        if ($_GET['indicator'] === 'both'){
+                            $indicator = "Symptoms of Anxiety Disorder or Depressive Disorder";
+                        }
+                    }
+                    
+                    if($uid === '' || $score === '' || $date === '' || $time === '' || $indicator === '') {
+                        echo "Invalid Data";
+                     } else {
+
+                    echo "<div>";
+                    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                    
+                    $stmt = $db->prepare("CALL storeQuiz(?,?,?,?,?)");
+                    $stmt->bindValue(1,$uid, PDO::PARAM_STR);
+                    $stmt->bindValue(2,$score, PDO::PARAM_STR);
+                    $stmt->bindValue(3,$date, PDO::PARAM_STR);
+                    $stmt->bindValue(4,$time, PDO::PARAM_STR);
+                    $stmt->bindValue(5,$indicator, PDO::PARAM_STR);
+                    
+                    $stmt->execute();
+                    echo "<br></br>";
+                    echo "Submitted Quiz Successfully";
+                    echo "</div>";
+                    }
+} catch (PDOException $e) {
+echo "Error!: ". $e->getMessage() . "<br/>";
+die();
+}
+break;
+                default:
+                    echo "<h2>Anxiety and Depression Survey DBMS</h2><br></br>";
+                    echo "<h3>By Martin Amundsen, Kaleb Johnson, and Alex Sindorf</h3>";
+                break;
                     
                 
             }

@@ -35,51 +35,25 @@
             </nav>
         </div>
       <h1>Set Account</h1>
-      <form method="post">
+      <form action='login.php?action=create' method="post">
         <div class="txt_field">
-          <input type="text" required/>
+          <input type="text" name = "use" required/>
           <span></span>
           <label>Type Username</label>
         </div>
         <div class="txt_field">
-          <input type="password" required/>
+          <input type="password" name = "pas" required/>
           <span></span>
           <label>Type Password</label>
         </div>
-        <div class="txt_field">
-          <input type="password" required/>
-          <span></span>
-          <label>Confirm Password</label>
-        </div>
         <p>Recovery Question:<br></br> What is your favorite color?</p>
         <div class="txt_field">
-          <input type="text" required/>
+          <input type="text" name = "que" required/>
           <span></span>
           <label>Recovery Question Answer</label>
         </div>
             <input type="submit" value="Set Account"/>
       </form>
-        <div class="signup_link">
-        <input type="button" value="Stored Procedure" onclick={getAll()}/>
-        </div>
     </div>
 </body>
 </html>
-<?php
-function getAll(){
-    echo "<div>";
-    echo "Hello Dude";
-    $stmt = $dbh->prepare("CALL createUser(?, ?, ?, ?)");
-    $stmt->bindParam(1,$return, PDO::PARAM_INT);
-    $stmt->bindParam(2,"James");
-    $stmt->bindParam(3,"Jamesp");
-    $stmt->bindParam(4,"james");
-
-
-    // call the stored procedure
-    $stmt->execute();
-    print $return;
-    print "Success";
-    echo "</div>";
-}
-?>

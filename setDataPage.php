@@ -35,7 +35,7 @@
             </nav>
         </div>
       <h1>Set Demographic Data</h1>
-      <form method="post">
+      <form action ='index.php?action=set' method="post">
         <div>
             <label for = "age">Age Range:</label>
             <select class = "dropdown" name = "age" id = "age">
@@ -148,9 +148,6 @@
         <br></br>
         <input type="submit" value="Set Demographics"/>
       </form>
-      <div class="signup_link">
-          <a onClick={navigateToHome}>Return to Home</a>
-        </div>
     </div>
 </body>
 </html>

@@ -35,7 +35,7 @@
             </nav>
         </div>
       <h1>Password Recovery</h1>
-      <form action='index.php?mode=reset' method='post'>
+      <form action='login.php?action=reset' method='post'>
         <div class="txt_field">
           <input type="text" name ="user" required/>
           <span></span>
@@ -56,47 +56,3 @@
     </div>
 </body>
 </html>
-<?php
-        try {
-            if (isset($_POST['action'])) {
-                echo "HelloDude";
-                        $user = "";
-                        if (isset($_POST['user'])) {
-                           $user = $_POST['user'];
-                        }
-                        $pass = "";
-                        if (isset($_POST['pass'])) {
-                           $pass = $_POST['pass'];
-                        }
-                        $ques = "";
-                        if (isset($_POST['ques'])) {
-                           $ques = $_POST['ques'];
-                        }
-                        
-
-                        if ($firstName === '' || $lastName === '' || $username === '') {
-                            echo "Invalid data";
-                            } else {
-                        echo "<div>";
-                        echo "Hello Dude";
-                        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                        
-                        $stmt = $db->prepare("CALL resetPass(?, ?, ?)");
-                        $stmt->bindValue(1,$user, PDO::PARAM_STR);
-                        $stmt->bindValue(2,$pass, PDO::PARAM_STR);
-                        $stmt->bindValue(3,$ques, PDO::PARAM_STR);
-                        
-                        // set parameters and execute
-                        //$name = "John";
-                        //$pass = "pass4";
-                        //$pr = "Green";
-                        // call the stored procedure
-                        $stmt->execute();
-                        echo "Updated Password Successfully";
-                        echo "</div>";}
-        }
-    } catch (PDOException $e) {
-        echo "Error!: ". $e->getMessage() . "<br/>";
-        die();
-    }
-?>
