@@ -73,6 +73,7 @@
                            array_push($xAxis,$item['Subgroup']);
                            array_push($yAxis, $item['per']);
                         }
+                        echo "<br></br><h2>Average Percentages at Risk for ". $indicator ."</h2>";
 
                   } catch (PDOException $e) {
                      echo "Error!: ". $e->getMessage() . "<br/>";
@@ -92,7 +93,7 @@ type: 'bar',
 data: {
   labels: <?php echo json_encode($xAxis)?>,
   datasets: [{
-    label: 'Percentage of at risk Symptoms',
+    label: 'Average Percentages of at risk Symptoms',
     data: <?php echo json_encode($yAxis)?>,
     borderWidth: 1
   }]

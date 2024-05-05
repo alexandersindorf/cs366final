@@ -47,6 +47,9 @@ if (!isset($_SESSION['uid'])){
                             <a class="nav-link" href="index.php?action=query">Query</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="tips.php">Wellness Tips</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="login.php">Login</a>
                         </li>
                         <?php
@@ -55,6 +58,7 @@ if (!isset($_SESSION['uid'])){
                         echo "<li class='nav-item'><a class='nav-link' href='quiz.php?qz=anx'>Anxiety Quiz</a></li>";
                         echo "<li class='nav-item'><a class='nav-link' href='quiz.php?qz=dep'>Depression Quiz</a></li>";
                         echo "<li class='nav-item'><a class='nav-link' href='quiz.php?qz=both'>Anxiety and Depression Quiz</a></li>";
+                        echo "<li class='nav-item'><a class='nav-link' href='index.php?action=logout'>Log Out</a></li>";
                         }?>
                     </ul>
                 </div>
@@ -182,6 +186,12 @@ if (!isset($_SESSION['uid'])){
         </div>
         <input type="submit" value="Create Bar Graph"/>
         <input type="submit" formaction = "index.php?action=graph&gr=line" value="Create Line Graph"/>
+        <?php
+        if ($_SESSION['uid'] != ''){
+        echo "<input type='submit' formaction = 'index.php?action=demo' value='Chart at Risk Data'/>";
+        echo "<input type='submit' formaction = 'index.php?action=compare' value='Compare quiz results to Current Quiz Selection'/>";
+        }
+        ?>
       </form>
    
         <?php
@@ -204,6 +214,13 @@ if (!isset($_SESSION['uid'])){
                         case "line":
                             include("lineChart.php");
                         break;
+                    }
+                break;
+                case "compare":
+                    include("barChart.php");
+                    include("quizChart.php");
+                    if(end($QyAxis) >= 3){
+                        echo "<script>alert('Your most recent quiz resulted in a score of 3 or greater. Further evaluation by a clinician or other health professional is generally recommended. Please check out the Wellness Tips page for tips and rescources.')</script>";
                     }
                 break;
                 
@@ -233,7 +250,6 @@ if (!isset($_SESSION['uid'])){
                         $check = $statement->fetchAll(PDO::FETCH_ASSOC);
                         foreach($check as $item){
                             foreach ($item as $key => $value) {
-                                echo $value;
                                 if ($value == 0){
                                     echo "Invalid username or password!"; 
                                     die(); 
@@ -248,16 +264,23 @@ if (!isset($_SESSION['uid'])){
                     die();
                 }
                 break;
+                case "logout":
+                    echo "Successful Log Out";
+                    $_SESSION["uid"] = '';
+                break;
 
                 case "query": 
 
+                    $sql = "Select Indicator, TotalScore, Day, TimeStamp From UserQuizData where UID = 'Alex' and Indicator = 'Symptoms of Anxiety Disorder'";
+                    
                     //$sql = "Select Time_PeriodS, Time_PeriodE, Percent from PulseSurveyDataset where Indicator = 'Symptoms of Depressive Disorder' and Subgroup = 'Wisconsin' Order By Time_PeriodS, Time_PeriodE";
                     //start end percentage                    
-                    
+
+                    //$sql = "Select s.Subgroup, AVG(p.Percent) from UserDemographicData u, Search s, PulseSurveyDataset p where u.UID = s.UID and s.Indicator = p.Indicator and p.Indicator = 'Symptoms of Depressive Disorder' and s.Subgroup = p.Subgroup Group By s.Subgroup Order By p.Percent";
 
                     //$sql = "select i.Subgroup, i.per from (select Indicator, Subgroup, AVG(Percent) as per from PulseSurveyDataset 
                     //group by Indicator, Subgroup) as i where Indicator = 'Symptoms of Depressive Disorder' and i.Subgroup in ('Male', 'Straight', 'Cis-gender male', 'Without disability')";
-                    $sql = "Select s.Subgroup, AVG(p.Percent) from UserDemographicData u, Search s, PulseSurveyDataset p where u.UID = s.UID and s.Indicator = p.Indicator and p.Indicator = 'Symptoms of Anxiety Disorder or Depressive Disorder' and s.Subgroup = p.Subgroup Group By s.Subgroup Order By p.Percent";
+                    //$sql = "Select s.Subgroup, AVG(p.Percent) from UserDemographicData u, Search s, PulseSurveyDataset p where u.UID = s.UID and s.Indicator = p.Indicator and p.Indicator = 'Symptoms of Anxiety Disorder or Depressive Disorder' and s.Subgroup = p.Subgroup Group By s.Subgroup Order By p.Percent";
 
                     //$parameterValues = array(":genre" => $genre);
                     $resultSet = getAll($sql, $db, $parameterValues);
@@ -335,6 +358,41 @@ if (!isset($_SESSION['uid'])){
      die();
  }
  break;
+            case "demo":
+                try {
+                     
+                    $indicator = '';
+
+                     if (isset($_POST['ind'])) {
+                        $indicator = $_POST['ind'];
+                     } 
+
+                     $sql = "Select s.Subgroup, AVG(p.Percent) from UserDemographicData u, Search s, PulseSurveyDataset p where u.UID = s.UID and s.Indicator = p.Indicator and p.Indicator = :indicator and s.Subgroup = p.Subgroup Group By s.Subgroup Order By p.Percent";
+
+                                    
+                        $parameters = [":indicator" => $indicator];
+        
+                        $statement = $db->prepare($sql);
+        
+                        $statement->execute($parameters);
+        
+                        $check = $statement->fetchAll(PDO::FETCH_ASSOC);
+                        
+                        $xAxis = array();
+                        $yAxis = array();
+
+                        foreach($check as $item){
+                           array_push($xAxis,$item['Subgroup']);
+                           array_push($yAxis, $item['AVG(p.Percent)']);
+                        }
+                        echo "<br></br><h2>Average Percentages at Risk for ". $indicator ."</h2>";
+
+                  } catch (PDOException $e) {
+                     echo "Error!: ". $e->getMessage() . "<br/>";
+                     die();
+                 }
+                 include("atRiskChart.php");
+            break;
             case "submitQuiz":
                 try {
                     $uid = '';
@@ -370,6 +428,7 @@ if (!isset($_SESSION['uid'])){
                             $indicator = "Symptoms of Depressive Disorder";
                         }
                         if ($_GET['indicator'] === 'both'){
+                            $score = $score / 2;
                             $indicator = "Symptoms of Anxiety Disorder or Depressive Disorder";
                         }
                     }
