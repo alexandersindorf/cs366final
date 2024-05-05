@@ -1,9 +1,17 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <?php
 
-                    try {
-                     
+                    /*try {
+                    $age = '';
+                    $state = '';
+                    $race = '';
+                    $edu = '';
+                    $Sex = '';
+                    $SOr = '';
+                    $genderI = '';
+                    $DisStat = '';
                     $indicator = '';
+
                     $array = array();
                     $subgroup = '';
 
@@ -22,38 +30,21 @@
                      if (isset($_POST['Sex'])) {
                         array_push($array,$_POST['Sex']);
                      }
-                     if (isset($_POST['Sex2'])) {
-                        array_push($array,$_POST['Sex2']);
-                     }
                      if (isset($_POST['SOr'])) {
                         array_push($array,$_POST['SOr']);
-                     }
-                     if (isset($_POST['SOr2'])) {
-                        array_push($array,$_POST['SOr2']);
-                     }
-                     if (isset($_POST['SOr3'])) {
-                        array_push($array,$_POST['SOr3']);
                      }
                      if (isset($_POST['genderI'])) {
                         array_push($array,$_POST['genderI']);
                      }
-                     if (isset($_POST['genderI2'])) {
-                        array_push($array,$_POST['genderI2']);
-                     }
-                     if (isset($_POST['genderI2'])) {
-                        array_push($array,$_POST['genderI2']);
-                     }
                      if (isset($_POST['DisStat'])) {
                         array_push($array,$_POST['DisStat']);
-                     }
-                     if (isset($_POST['DisStat2'])) {
-                        array_push($array,$_POST['DisStat2']);
                      }
                      if (isset($_POST['ind'])) {
                         $indicator = $_POST['ind'];
                      }
                      
                      $subgroup = "('" . implode("', '", $array) . "')";
+                     print $subgroup;
 
                      $sql = "select i.Subgroup, i.per from (select Indicator, Subgroup, AVG(Percent) as per from PulseSurveyDataset 
                     group by Indicator, Subgroup) as i where Indicator = :indicator and i.Subgroup in " . $subgroup;
@@ -77,8 +68,8 @@
                   } catch (PDOException $e) {
                      echo "Error!: ". $e->getMessage() . "<br/>";
                      die();
-                 }
-
+                 }*/
+echo "Line";
 ?>
 <div>
     <canvas id="myChart"></canvas>
@@ -87,13 +78,30 @@
 <script>
 const ctx = document.getElementById('myChart');
 
-new Chart(ctx, {
-type: 'bar',
-data: {
-  labels: <?php echo json_encode($xAxis)?>,
+const labels = Utils.months({count: 7});
+const data = {
+  labels: labels,
   datasets: [{
-    label: 'Percentage of at risk Symptoms',
-    data: <?php echo json_encode($yAxis)?>,
+    label: 'My First Dataset',
+    data: [65, 59, 80, 81, 56, 55, 40],
+    fill: false,
+    borderColor: 'rgb(75, 192, 192)',
+    tension: 0.1
+  }]
+};
+
+const lineChart = new Chart(ctx, {
+  type: 'line',
+  data: data;
+});
+
+/*new Chart(ctx, {
+type: 'line',
+data: {
+  labels: ?php echo json_encode($xAxis)?>,
+  datasets: [{
+    label: 'Percentage of :indicator',
+    data: ?php echo json_encode($yAxis)?>,
     borderWidth: 1
   }]
 },
@@ -104,5 +112,5 @@ options: {
     }
   }
 }
-});
+});*/
 </script>

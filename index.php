@@ -1,7 +1,9 @@
 <?php
 session_start();
 
-$_SESSION['uid']; // Default no user logged in
+if (!isset($_SESSION['uid'])){
+    $_SESSION['uid'] = ''; // Default no user logged in
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -153,24 +155,24 @@ $_SESSION['uid']; // Default no user logged in
         <div>
             <p>Sex</p>
             <input type = "radio" name = "Sex" id = "fe" value = "Female"/>Female
-            <input type = "radio" name = "Sex" id = "ma" value = "Male"/>Male
+            <input type = "radio" name = "Sex2" id = "ma" value = "Male"/>Male
         </div>
         <div>
             <p>Sexual Orientaiton</p>
             <input type = "radio" name = "SOr" id = "gl" value = "Gay or lesbian"/>Gay or Lesbian
-            <input type = "radio" name = "SOr" id = "st" value = "Straight"/>Straight
-            <input type = "radio" name = "SOr" id = "bi" value = "Bisexual"/>Bisexual
+            <input type = "radio" name = "SOr2" id = "st" value = "Straight"/>Straight
+            <input type = "radio" name = "SOr3" id = "bi" value = "Bisexual"/>Bisexual
         </div>
         <div>
             <p>Gender Identity</p>
             <input type = "radio" name = "genderI" id = "cgm" value = "Cis-gender male"/><label for = "">Cis-gender Male</label>
-            <input type = "radio" name = "genderI" id = "cgf" value = "Cis-gender female"/><label for = "">Cis-gender Female</label>
-            <input type = "radio" name = "genderI" id = "trg" value = "Transgender"/><label for = "">Transgender</label>
+            <input type = "radio" name = "genderI2" id = "cgf" value = "Cis-gender female"/><label for = "">Cis-gender Female</label>
+            <input type = "radio" name = "genderI3" id = "trg" value = "Transgender"/><label for = "">Transgender</label>
         </div>
         <div>
             <p>Disability Status</p>
             <input type = "radio" name = "DisStat" id = "yd" value = "With disability"/><label for = "">With Disability</label>
-            <input type = "radio" name = "DisStat" id = "nd" value = "Without disability"/><label for = "">Without Disability</label>
+            <input type = "radio" name = "DisStat2" id = "nd" value = "Without disability"/><label for = "">Without Disability</label>
         </div>
         <div><br></br>
             <p>Quiz Result Set</p>
@@ -200,7 +202,7 @@ $_SESSION['uid']; // Default no user logged in
                         break;
                         
                         case "line":
-                            echo "LINE";
+                            include("lineChart.php");
                         break;
                     }
                 break;
@@ -252,7 +254,10 @@ $_SESSION['uid']; // Default no user logged in
                     //$sql = "Select Time_PeriodS, Time_PeriodE, Percent from PulseSurveyDataset where Indicator = 'Symptoms of Depressive Disorder' and Subgroup = 'Wisconsin' Order By Time_PeriodS, Time_PeriodE";
                     //start end percentage                    
                     
-                    $sql = "Select s.Subgroup, AVG(p.Value) from UserDemographicData u, Search s, PulseSurveyData p where u.UID = s.UID and s.Indicator = p.Indicator and p.Indicator = 'Symptoms of Anxiety Disorder or Depressive Disorder' and s.Subgroup = p.Subgroup Group By s.Subgroup Order By p.value";
+
+                    //$sql = "select i.Subgroup, i.per from (select Indicator, Subgroup, AVG(Percent) as per from PulseSurveyDataset 
+                    //group by Indicator, Subgroup) as i where Indicator = 'Symptoms of Depressive Disorder' and i.Subgroup in ('Male', 'Straight', 'Cis-gender male', 'Without disability')";
+                    $sql = "Select s.Subgroup, AVG(p.Percent) from UserDemographicData u, Search s, PulseSurveyDataset p where u.UID = s.UID and s.Indicator = p.Indicator and p.Indicator = 'Symptoms of Anxiety Disorder or Depressive Disorder' and s.Subgroup = p.Subgroup Group By s.Subgroup Order By p.Percent";
 
                     //$parameterValues = array(":genre" => $genre);
                     $resultSet = getAll($sql, $db, $parameterValues);
