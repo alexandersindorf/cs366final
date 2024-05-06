@@ -69,7 +69,7 @@
                      echo "Error!: ". $e->getMessage() . "<br/>";
                      die();
                  }*/
-echo "Line";
+echo "Ran out of time to implement the Line Graph";
 ?>
 <div>
     <canvas id="myChart"></canvas>

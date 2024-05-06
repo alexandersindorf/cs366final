@@ -93,7 +93,7 @@ type: 'bar',
 data: {
   labels: <?php echo json_encode($xAxis)?>,
   datasets: [{
-    label: 'Average Percentages of at risk Symptoms',
+    label: 'Average Percentage of at risk Symptoms',
     data: <?php echo json_encode($yAxis)?>,
     borderWidth: 1
   }]

@@ -217,7 +217,7 @@ if (!isset($_SESSION['uid'])){
                     }
                 break;
                 case "compare":
-                    include("barChart.php");
+                    include("atRiskChart.php");
                     include("quizChart.php");
                     if(end($QyAxis) >= 3){
                         echo "<script>alert('Your most recent quiz resulted in a score of 3 or greater. Further evaluation by a clinician or other health professional is generally recommended. Please check out the Wellness Tips page for tips and rescources.')</script>";
@@ -271,9 +271,11 @@ if (!isset($_SESSION['uid'])){
 
                 case "query": 
 
-                    $sql = "Select Indicator, TotalScore, Day, TimeStamp From UserQuizData where UID = 'Alex' and Indicator = 'Symptoms of Anxiety Disorder'";
+                    //$sql = "Select Indicator, TotalScore, Day, TimeStamp From UserQuizData where UID = 'Alex' and Indicator = 'Symptoms of Anxiety Disorder'";
                     
-                    //$sql = "Select Time_PeriodS, Time_PeriodE, Percent from PulseSurveyDataset where Indicator = 'Symptoms of Depressive Disorder' and Subgroup = 'Wisconsin' Order By Time_PeriodS, Time_PeriodE";
+                    echo "<br></br>Query we were going to use for the Line Graphs";
+                    $sql = "Select Time_PeriodS, Time_PeriodE, Percent from PulseSurveyDataset where Indicator = 'Symptoms of Depressive Disorder' and Subgroup = 'Wisconsin' Order By Time_PeriodS, Time_PeriodE";
+                    echo "<br></br>Select Time_PeriodS, Time_PeriodE, Percent from PulseSurveyDataset where Indicator = 'Symptoms of Depressive Disorder' and Subgroup = 'Wisconsin' Order By Time_PeriodS, Time_PeriodE";
                     //start end percentage                    
 
                     //$sql = "Select s.Subgroup, AVG(p.Percent) from UserDemographicData u, Search s, PulseSurveyDataset p where u.UID = s.UID and s.Indicator = p.Indicator and p.Indicator = 'Symptoms of Depressive Disorder' and s.Subgroup = p.Subgroup Group By s.Subgroup Order By p.Percent";
@@ -286,7 +288,7 @@ if (!isset($_SESSION['uid'])){
                     $resultSet = getAll($sql, $db, $parameterValues);
                     
                     $pageTitle = "List of Groups";
-                    $columns = array("Subgroup", "AVG");
+                    $columns = array("Start Time", "End Time" ,"Percentage");
                     displayResultSet($pageTitle, $resultSet, $columns);
                 break;
                 case "set":
@@ -305,16 +307,16 @@ if (!isset($_SESSION['uid'])){
                      if (isset($_SESSION["uid"])) {
                         $uid = $_SESSION["uid"];
                      }
-                     if (isset($_POST['age'])) {
+                     if (isset($_POST['age']) && $_POST['age'] != 'd') {
                         $age = $_POST['age'];
                      }
-                     if (isset($_POST['state'])) {
+                     if (isset($_POST['state']) && $_POST['state'] != 'd') {
                         $state = $_POST['state'];
                      }
-                     if (isset($_POST['race'])) {
+                     if (isset($_POST['race']) && $_POST['race'] != 'd') {
                         $race = $_POST['race'];
                      }
-                     if (isset($_POST['edu'])) {
+                     if (isset($_POST['edu']) && $_POST['edu'] != 'd') {
                         $edu = $_POST['edu'];
                      }
                      if (isset($_POST['Sex'])) {
@@ -359,38 +361,6 @@ if (!isset($_SESSION['uid'])){
  }
  break;
             case "demo":
-                try {
-                     
-                    $indicator = '';
-
-                     if (isset($_POST['ind'])) {
-                        $indicator = $_POST['ind'];
-                     } 
-
-                     $sql = "Select s.Subgroup, AVG(p.Percent) from UserDemographicData u, Search s, PulseSurveyDataset p where u.UID = s.UID and s.Indicator = p.Indicator and p.Indicator = :indicator and s.Subgroup = p.Subgroup Group By s.Subgroup Order By p.Percent";
-
-                                    
-                        $parameters = [":indicator" => $indicator];
-        
-                        $statement = $db->prepare($sql);
-        
-                        $statement->execute($parameters);
-        
-                        $check = $statement->fetchAll(PDO::FETCH_ASSOC);
-                        
-                        $xAxis = array();
-                        $yAxis = array();
-
-                        foreach($check as $item){
-                           array_push($xAxis,$item['Subgroup']);
-                           array_push($yAxis, $item['AVG(p.Percent)']);
-                        }
-                        echo "<br></br><h2>Average Percentages at Risk for ". $indicator ."</h2>";
-
-                  } catch (PDOException $e) {
-                     echo "Error!: ". $e->getMessage() . "<br/>";
-                     die();
-                 }
                  include("atRiskChart.php");
             break;
             case "submitQuiz":
@@ -436,7 +406,8 @@ if (!isset($_SESSION['uid'])){
                     if($uid === '' || $indicator === '') {
                         echo "Invalid Data";
                      } else {
-
+                    
+                    date_default_timezone_set("America/North_Dakota/Center");
                     $date = date("Y-m-d");
                     $time = date("H:i:s");
 
@@ -497,34 +468,21 @@ function displayResultSet($pageTitle, $resultSet, $columns) {
             
             echo "<tbody>";
             foreach( $resultSet as $item){
-                /* Each $item is an associative array.  Keys are the same as the field names 
-                    used in the SQL statement.
-                */
-                // Define a table row for each item in the $resultSet array
                 echo "<tr>";
-                
-                // We can use a foreach loop to access each element of the $item array
                 foreach ($item as $key => $value) {
                     echo "<td>{$value}</td>";
                 }
-                
                 echo "</tr>";
-                
             }
             echo "</tbody></table>";
 }
 
 function getAll($sql, $db, $parameterValues = null){
-    /* Prepare the SQL statement. 
-        The $db->prepare($sql) method returns an object.
-    */
+
     $statement = $db->prepare($sql);
 
-    /* Execute prepared statement. The execute( ) method returns a resource object.  */
     $statement->execute($parameterValues);
 
-    /* Use the fetchAll( ) method to extract records from the result set.
-    */
     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     
     return $result;

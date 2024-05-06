@@ -42,6 +42,7 @@ session_start();
         <div>
             <label for = "age">Age Range:</label>
             <select class = "dropdown" name = "age" id = "age">
+                <option value = "d" default>-</option>
                 <option value = "18 - 29 years">18 - 29 Years</option>
                 <option value = "30 - 39 years">30 - 39 Years</option>
                 <option value = "40 - 49 years">40 - 49 Years</option>
@@ -54,6 +55,7 @@ session_start();
         <div>
             <label for = "state">State:</label>
             <select class = "dropdown" name = "state" id = "state">
+                <option value = "d" default>-</option>
                 <option value = "Alabama">Alabama</option>
                 <option value = "Alaska">Alaska</option>
                 <option value = "Arizona">Arizona</option>
@@ -110,6 +112,7 @@ session_start();
         <div>
             <label for = "race">Race:</label>
             <select class = "dropdown" name = "race" id = "race">
+                <option value = "d" default>-</option>
                 <option value = "Hispanic or Latino">Hispanic or Latino</option>
                 <option value = "Non-Hispanic Asian/single race">Non-Hispanic Asian, Single Race</option>
                 <option value = "Non-Hispanic Black/single race">Non-Hispanic Black, Single Race</option>
@@ -120,6 +123,7 @@ session_start();
         <div>
             <label for = "edu">Education:</label>
             <select class = "dropdown" name = "edu" id = "edu">
+                <option value = "d" default>-</option>
                 <option value = "Less than a high school diploma">Less than a High School Deploma</option>
                 <option value = "High school diploma or GED">High School Diploma or GED</option>
                 <option value = "Some college/Associate's degree">Some College/Associate's Degree</option>
